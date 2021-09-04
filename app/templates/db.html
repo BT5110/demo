@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} DB {% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h2>Page View Report</h2>
+  <p>
+    This is a very simple page that, each time there is made a request, it will
+    save one row in the database with the current datetime and then it will
+    show all the datetimes of all the requests made.
+  </p>
+  <p>
+    You may find it interesting to check out <code>app/views.py</code>,
+    <code>app/models.py</code> and <code>app/templates/db.html</code>
+    (the latter being the file where the text you're reading now is written)!
+  </p>
+  <ul>
+  {% for greeting in greetings %}
+    <li>{{ greeting.when }}</li>
+  {% endfor %}
+  </ul>
+</div>
+{% endblock %}

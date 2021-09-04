@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+{% load static %}
+
+{% block content %}
+
+<div class="jumbotron text-center">
+  <div class="container">
+    <a href="/" class="lang-logo">
+      <img src="{% static 'lang-logo.png'%}">
+    </a>
+    <h1>
+      Welcome to the BT5110<br/>
+      Django tutorial
+    </h1>
+    <p>
+      This is a sample Python application deployed to Heroku. It's a reasonably simple app - but a good foundation for understanding how to work with Django and how to expose your apps to the web.
+    </p>
+    <a type="button" class="btn btn-lg btn-default" href="https://github.com/BT5110/demo">
+      <span class="glyphicon glyphicon-download"></span> Source on GitHub
+    </a>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-info-sign"></span> How this sample app works</h3>
+      <ul>
+        <li>This app was deployed to Heroku using GitHub.</li>
+        <li>It is a fork from <a href="https://github.com/heroku/python-getting-started">Python: Getting Started</a> tailored to our class.</li>
+        <li>When Heroku received the source code, it fetched all the dependencies in <a href="https://github.com/BT5110/demo/blob/main/requirements.txt">requirements.txt</a>, creating a deployable slug.</li>
+        <li>The platform then spins up a dyno, a lightweight container that provides an isolated environment in which the slug can be mounted and executed.</li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-link"></span> Next Steps</h3>
+      <ul>
+        <li>Set up an account on <a href="https://github.com">GitHub</a> and <a href="https://heroku.com/">Heroku</a>, respectively.</li>
+        <li>Follow the steps outlined at the README of the <a href="https://github.com/BT5110/demo">source of this app</a>.</li>
+        <li>Within a few minutes, you should be able to see your changes deployed to the web!</li>
+      </ul>
+    </div>
+  </div> <!-- row -->
+  <br/>
+  <div class="alert alert-info text-center" role="alert">
+    We will not cover how the the starter app was set up, but if you want to do so, you can follow <a href="https://github.com/heroku/python-getting-started">Python: Getting Started</a>. Furthermore, while you in principle can look at the final source for TPC-C, please try to follow the steps to build it yourself. This will greatly enhance your understanding and thus make it easier once you get to the project.
+  </div>
+</div>
+{% endblock %}
