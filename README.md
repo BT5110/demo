@@ -16,13 +16,16 @@ $ git clone https://github.com/BT5110/demo.git
 $ cd demo
 ```
 
-This will download the code to your computer. One of the files will be called [`.env-sample`](/.env-sample). Make a new file called `.env` where you copy the contents over, and then you can set the values as you desire (namely, make sure `LOCAL_DB_NAME` and `LOCAL_DB_USER` are correctly configured).
+This will download the code to your computer. One of the files will be called [`.env-sample`](/.env-sample). Make a new file called `.env` where you copy the contents over, and then you can set the values as you desire (namely, make sure `LOCAL_DB_NAME` and `LOCAL_DB_USER` are correctly configured, and `LOCAL_DB_PASSWORD` if you have set up a local password).
 
 Now run the following to finish the setup:
 
 ```sh
 $ python3 -m venv .venv
-$ source .venv/bin/activate
+# The next step depends on your OS:
+$ source .venv/bin/activate   # macOS / Linux
+$ ./venv/Script/activate.bat  # Windows
+
 $ pip install -r requirements.txt
 
 $ python manage.py migrate
@@ -53,5 +56,3 @@ Make sure you have followed the steps above to run it locally. Then:
 	* Deploy your app in its current state, and do such that Heroku automatically deploys changes whenever you push your code to GitHub.
 	![deploy](./images/heroku-deploy.png)
 3. After 1-2 min, you should be able to see your page at `your-app-name.herokuapp.com`!
-
-

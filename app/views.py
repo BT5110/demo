@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from django.db import connections
 
-from .models import Greeting
+from app.utils import namedtuplefetchall
 
 
 def index(request):
@@ -9,10 +10,11 @@ def index(request):
 
 
 def db(request):
-    greeting = Greeting()
-    greeting.save()
+    with connections['default'].cursor() as cursor:
+        cursor.execute('INSERT INTO app_greeting ("when") VALUES (NOW());')
+        cursor.execute('SELECT "when" FROM app_greeting;')
+        greetings = namedtuplefetchall(cursor)
 
-    greetings = Greeting.objects.all()
     context = {'greetings': greetings, 'nbar': 'db'}
     return render(request, 'db.html', context)
 
