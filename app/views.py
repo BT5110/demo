@@ -8,27 +8,10 @@ from app.utils import namedtuplefetchall, clamp
 from app.forms import ImoForm
 
 PAGE_SIZE = 20
-ALL_COLUMNS = [
+COLUMNS = [
     'imo',
     'ship_name',
-    'ship_type',
-    'reporting_year',
-    'technical_efficiency_type',
-    'technical_efficiency_number',
-    'port_of_registry',
-    'home_port',
-    'ice_class',
-    'doc_issue_date',
-    'doc_expiry_date',
-    'fuel_consumption_m_tonnes',
-    'co2_emissions_m_tonnes',
-    'annual_hours_at_sea',
-    'fuel_consumption_per_dist',
-    'fuel_consumption_per_transport_work',
-    'co2_emissions_per_dist',
-    'co2_emissions_per_transport_work_mass',
-    'co2_emissions_per_transport_work_pax',
-    'co2_emissions_per_transport_work_freight'
+    'ship_type'
 ]
 
 
@@ -53,26 +36,18 @@ def emissions(request, page=1):
     """Shows the emissions table page"""
     msg = None
     order_by = request.GET.get('order_by', '')
-    order_by = order_by if order_by in ALL_COLUMNS else 'imo'
+    order_by = order_by if order_by in COLUMNS else 'imo'
 
     with connections['default'].cursor() as cursor:
-        cursor.execute('SELECT COUNT(*) FROM co2emission')
+        cursor.execute('SELECT COUNT(*) FROM co2emission_reduced')
         count = cursor.fetchone()[0]
         num_pages = (count - 1) // PAGE_SIZE + 1
         page = clamp(page, 1, num_pages)
 
         offset = (page - 1) * PAGE_SIZE
         cursor.execute(f'''
-            SELECT
-                imo,
-                ship_name,
-                ship_type,
-                technical_efficiency_type,
-                technical_efficiency_number,
-                fuel_consumption_m_tonnes,
-                co2_emissions_m_tonnes,
-                co2_emissions_per_transport_work_mass
-            FROM co2emission
+            SELECT {", ".join(COLUMNS)}
+            FROM co2emission_reduced
             ORDER BY {order_by}
             OFFSET %s
             LIMIT %s
@@ -103,7 +78,7 @@ def insert_update_values(form, post, action, imo):
         return False, 'There were errors in your form'
 
     # Set values to None if left blank
-    cols = ALL_COLUMNS[:]
+    cols = COLUMNS[:]
     values = [post.get(col, None) for col in cols]
     values = [val if val != '' else None for val in values]
 
@@ -112,7 +87,7 @@ def insert_update_values(form, post, action, imo):
         cols, values = cols[1:], values[1:]
         with connections['default'].cursor() as cursor:
             cursor.execute(f'''
-                UPDATE co2emission
+                UPDATE co2emission_reduced
                 SET {", ".join(f"{col} = %s" for col in cols)}
                 WHERE imo = %s;
             ''', [*values, imo])
@@ -121,7 +96,7 @@ def insert_update_values(form, post, action, imo):
     # Else insert
     with connections['default'].cursor() as cursor:
         cursor.execute(f'''
-            INSERT INTO co2emission ({", ".join(cols)})
+            INSERT INTO co2emission_reduced ({", ".join(cols)})
             VALUES ({", ".join(["%s"] * len(cols))});
         ''', values)
     return True, '✔ IMO inserted successfully'
@@ -150,7 +125,7 @@ def emission_detail(request, imo=None):
 
         if action == 'delete':
             with connections['default'].cursor() as cursor:
-                cursor.execute('DELETE FROM co2emission WHERE imo = %s;', [imo])
+                cursor.execute('DELETE FROM co2emission_reduced WHERE imo = %s;', [imo])
             return redirect(f'/emissions?deleted={imo}')
         try:
             success, msg = insert_update_values(form, request.POST, action, imo)
@@ -162,13 +137,14 @@ def emission_detail(request, imo=None):
             success, msg = False, f'Some unhandled error occured: {e}'
     elif imo:  # GET request and imo is set
         with connections['default'].cursor() as cursor:
-            cursor.execute('SELECT * FROM co2emission WHERE imo = %s', [imo])
+            cursor.execute('SELECT * FROM co2emission_reduced WHERE imo = %s', [imo])
             try:
                 initial_values = namedtuplefetchall(cursor)[0]._asdict()
             except IndexError:
                 raise Http404(f'IMO {imo} not found')
 
     # Set dates (if present) to iso format, necessary for form
+    # We don't use this in class, but you will need it for your project
     for field in ['doc_issue_date', 'doc_expiry_date']:
         if initial_values.get(field, None) is not None:
             initial_values[field] = initial_values[field].isoformat()
