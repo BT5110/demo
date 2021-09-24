@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}
+  {% if is_update %}{{ imo }}{% else %}Insert{% endif %} Emission Details
+{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  {% if is_update %}
+    <h1>Emission Details for IMO {{ imo }}</h1>
+  {% else %}
+    <h1>Insert New Emission Details</h1>
+  {% endif %}
+  {% if msg and success %}
+    <span class="text-success h3">{{ msg }}</span>
+  {% elif msg %}
+    <span class="text-danger h3">{{ msg }}</span>
+  {% endif %}
+  <br/>
+  <br/>
+  <form id="imoForm" method="POST">
+    {% csrf_token %}
+    <input id="action" type="hidden" name="action" value="">
+    {% for field in form %}
+      <div class="form-group row">
+        <label class="col-12 col-form-label" for="id_{{ field.name }}">{{ field.label }}</label>
+        {% if field.errors %}
+          <div class="border-bottom-danger text-danger">
+            {{ field.errors }}
+          </div>
+        {% endif %}
+        <div class="col-12">
+          {% if field.field.widget.input_type == "select" %}
+            <select name="{{ field.name }}" id="id_{{ field.name }}" class="form-control">
+              {% for choice in field.field.choices %}
+                <option value="{{ choice.0 }}"
+                  {% if choice.0 in field.value %} selected="selected" {% endif %}
+                >
+                  {{ choice.1 }}
+                </option>
+              {% endfor %}
+            </select>
+          {% else %}
+            <input
+              type="{{ field.field.widget.input_type }}"
+              class="form-control"
+              name="{{ field.name }}"
+              id="id_{{ field.name }}"
+              value="{{ field.value|default:'' }}"
+              {% if field.disabled %} disabled {% endif %}
+            >
+          {% endif %}
+        </div>
+        <div class="col-12 help-text">{{ field.help_text }} </div>
+      </div>
+    {% endfor %}
+    <div class="row">
+      <div class="col-12">
+        {% if is_update %}
+          <button data-action="update" type="button" onclick="submitForm(this)" class="btn btn-primary">Update</button>
+          <button data-action="delete" type="button" onclick="submitForm(this)" class="btn btn-danger">Delete</button>
+        {% else %}
+          <button data-action="insert" type="button" onclick="submitForm(this)" class="btn btn-success">Insert</button>
+        {% endif %}
+      </div>
+    </div>
+  </form>
+  <br/>
+  <br/>
+</div>
+<script>
+  function submitForm(btn) {
+    document.getElementById('action').value = btn.dataset.action;
+    document.getElementById('imoForm').submit();
+  }
+</script>
+{% endblock %}

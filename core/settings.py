@@ -65,6 +65,14 @@ TEMPLATES = [
     }
 ]
 
+DEFAULT_CACHE = 'django.core.cache.backends.locmem.LocMemCache'
+CACHES = {
+    'default': {
+        'BACKEND': config('CACHE_BACKEND', default=DEFAULT_CACHE),
+        'LOCATION': 'unique-snowflake'
+    }
+}
+
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database

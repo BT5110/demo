@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %} Emissions {% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container" style="padding-bottom: 50px;">
+  <h2>Emissions</h2>
+  {% if msg %}
+    <span class="text-success h4">{{ msg }}</span>
+  {% endif %}
+  <p>Showing page {{ page }} of {{ num_pages }} pages</p>
+  <button
+    class="btn btn-primary"
+    {% if page == 1 %} disabled {% endif %}
+    onclick="location.href='/emissions/{{page|add:"-1"}}?order_by={{ order_by }}';"
+  >
+    ❮ Previous
+  </button>
+  <button
+    class="btn btn-primary"
+    {% if page == num_pages %} disabled {% endif %}
+    onclick="location.href='/emissions/{{page|add:"1"}}?order_by={{ order_by }}';"
+  >
+    Next ❯
+  </button>
+  <button
+    class="btn btn-success"
+    onclick="location.href='/emissions/imo/';"
+    style="float: right;"
+  >
+    Insert new
+  </button>
+  <br/>
+  <br/>
+  <div class="table-responsive">
+    <table class="table table-hover table-striped">
+      <thead>
+        <tr>
+          <th style="cursor:alias !important;" onclick="window.location='/emissions/?order_by=imo'">IMO</th>
+          <th style="cursor:alias !important;" onclick="window.location='/emissions/?order_by=ship_name'">Ship Name</th>
+          <th style="cursor:alias !important;" onclick="window.location='/emissions/?order_by=ship_type'">Ship Type</th>
+          <th style="cursor:alias !important;" onclick="window.location='/emissions/?order_by=technical_efficiency_type'">Technical Efficiency (Type)</th>
+          <th style="cursor:alias !important;" onclick="window.location='/emissions/?order_by=technical_efficiency_number'">Technical Efficiency (Number)</th>
+          <th style="cursor:alias !important;" onclick="window.location='/emissions/?order_by=fuel_consumption_m_tonnes'">Fuel Consumption</th>
+          <th style="cursor:alias !important;" onclick="window.location='/emissions/?order_by=co2_emissions_m_tonnes'">CO2 emiss. [m tonnes]</th>
+          <th style="cursor:alias !important;" onclick="window.location='/emissions/?order_by=co2_emissions_per_transport_work_mass'">CO2 emiss. per transp. work</th>
+        </tr>
+      </thead>
+      {% for row in rows %}
+        <tr style="cursor:pointer;" onclick="window.location='/emissions/imo/{{ row.imo }}'">
+          {% for val in row %}
+          <td>{{ val|default:'' }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+CREATE TABLE co2emission (
+    imo BIGINT PRIMARY KEY,
+    ship_name VARCHAR(64) NOT NULL,
+    ship_type VARCHAR(64) NOT NULL,
+    reporting_year INT NOT NULL,
+    technical_efficiency_type VARCHAR(16) NOT NULL,
+    technical_efficiency_number REAL,
+    port_of_registry VARCHAR(32),
+    home_port VARCHAR(32),
+    ice_class VARCHAR(32),
+    doc_issue_date DATE,
+    doc_expiry_date DATE,
+    fuel_consumption_m_tonnes REAL,
+    co2_emissions_m_tonnes REAL,
+    annual_hours_at_sea REAL,
+    fuel_consumption_per_dist REAL,
+    fuel_consumption_per_transport_work REAL,
+    co2_emissions_per_dist REAL,
+    co2_emissions_per_transport_work_mass REAL,
+    co2_emissions_per_transport_work_pax REAL,
+    co2_emissions_per_transport_work_freight REAL
+);
