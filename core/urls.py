@@ -13,6 +13,5 @@ urlpatterns = [
     path('emissions/<int:page>', app.views.emissions, name='emissions'),
     path('emissions/imo/', app.views.emission_detail, name='emission_detail'),
     path('emissions/imo/<int:imo>', app.views.emission_detail, name='emission_detail'),
-    path('project/', app.views.project, name='project'),
     path('admin/', admin.site.urls),
 ]

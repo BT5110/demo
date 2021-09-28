@@ -11,7 +11,7 @@ PAGE_SIZE = 20
 COLUMNS = [
     'imo',
     'ship_name',
-    'ship_type'
+    'technical_efficiency_number'
 ]
 
 
@@ -163,8 +163,3 @@ def emission_detail(request, imo=None):
         'success': success
     }
     return render(request, 'emission_detail.html', context)
-
-
-def project(request):
-    context = {'nbar': 'project'}
-    return render(request, 'project.html', context)

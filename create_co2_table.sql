@@ -1,5 +1,5 @@
-CREATE TABLE co2emission (
+CREATE TABLE co2emission_reduced (
     imo BIGINT PRIMARY KEY,
     ship_name VARCHAR(64) NOT NULL,
-    ship_type VARCHAR(64)
+    technical_efficiency_number REAL
 );
