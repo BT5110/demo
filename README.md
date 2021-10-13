@@ -14,6 +14,7 @@ Make sure you have [Python 3.9](https://docs.python-guide.org/starting/installat
 ```sh
 $ git clone https://github.com/BT5110/demo.git
 $ cd demo
+$ git remote remove origin  # Delete the reference to the BT5110/demo repo
 ```
 
 This will download the code to your computer. One of the files will be called [`.env-sample`](/.env-sample). Make a new file called `.env` where you copy the contents over, and then you can set the values as you desire (namely, make sure `LOCAL_DB_NAME` and `LOCAL_DB_USER` are correctly configured, and `LOCAL_DB_PASSWORD` if you have set up a local password).
