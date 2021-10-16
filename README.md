@@ -25,7 +25,7 @@ Now run the following to finish the setup:
 $ python3 -m venv .venv
 # The next step depends on your OS:
 $ source .venv/bin/activate   # macOS / Linux
-$ ./venv/Script/activate.bat  # Windows
+$ .venv/Scripts/activate.bat  # Windows
 
 $ pip install -r requirements.txt
 
@@ -57,3 +57,7 @@ Make sure you have followed the steps above to run it locally. Then:
 	* Deploy your app in its current state, and do such that Heroku automatically deploys changes whenever you push your code to GitHub.
 	![deploy](./images/heroku-deploy.png)
 3. After 1-2 min, you should be able to see your page at `your-app-name.herokuapp.com`!
+
+## Known issues
+
+Please refer to the erratum post on LumiNUS if you run into any issues.
