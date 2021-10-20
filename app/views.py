@@ -11,7 +11,10 @@ PAGE_SIZE = 20
 COLUMNS = [
     'imo',
     'ship_name',
-    'technical_efficiency_number'
+    'technical_efficiency_number',
+    'ship_type',
+    'issue_date',
+    'expiry_date'
 ]
 
 
@@ -163,3 +166,34 @@ def emission_detail(request, imo=None):
         'success': success
     }
     return render(request, 'emission_detail.html', context)
+
+def aggregation (request, page =1):
+    """Find the number of different ships (based on the combination of the IMO number and name of the ship of that type as well as the minimum, average and maximum EEDI values for ships of that type"""
+    msg = None
+
+    with connections['default'].cursor() as cursor:
+        cursor.execute('SELECT COUNT(*) FROM co2emission_reduced')
+        count = cursor.fetchone()[0]
+        num_pages = (count - 1) // PAGE_SIZE + 1
+        page = clamp(page, 1, num_pages)
+
+        offset = (page - 1) * PAGE_SIZE
+        cursor.execute(f'''
+            SELECT c.ship_type, count(concat(c.imo, c.ship_name)), max(c.technical_efficiency_number), avg(c.technical_efficiency_number), min(c.technical_efficiency_number)
+            FROM co2emission_reduced AS c
+            GROUP BY c.ship_type
+            ORDER BY %s
+            OFFSET %s
+            LIMIT %s
+        ''', [offset, PAGE_SIZE])
+        rows = namedtuplefetchall(cursor)
+
+    context = {
+        'nbar': 'aggregation',
+        'page': page,
+        'rows': rows,
+        'num_pages': num_pages,
+        'msg': msg,
+        'order_by': order_by
+    }
+    return render(request, 'aggregation.html', context)
